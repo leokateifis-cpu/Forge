@@ -174,7 +174,7 @@ export function PapersTab() {
 
               <div className="flex items-center gap-2">
                 <a
-                  href={paper.arxiv_id}
+                  href={`https://arxiv.org/abs/${paper.arxiv_id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors"

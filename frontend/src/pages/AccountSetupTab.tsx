@@ -83,20 +83,43 @@ export function AccountSetupTab() {
               <p className="text-xs text-slate-500">Select a validated project to rank prop firms by expected value.</p>
             )}
 
-            {propFirmsQuery.data && rankings.length === 0 && (
-              <div className="space-y-2">
-                {propFirmsQuery.data.map((f: any) => (
-                  <div key={f.firm} className="flex items-center justify-between py-2 border-b border-[#1e1e2e] last:border-0">
-                    <span className="text-xs font-mono text-slate-300">{f.firm}</span>
-                    <div className="flex gap-3 text-[10px] text-slate-500 font-mono">
-                      <span>Max DD {(f.trailing_drawdown_pct * 100).toFixed(0)}%</span>
-                      <span>Target {(f.profit_target_pct * 100).toFixed(0)}%</span>
-                      <span>Fee ${f.evaluation_fee.toLocaleString()}</span>
+            {propFirmsQuery.data && rankings.length === 0 && (() => {
+              // Group account types by firm
+              const byFirm: Record<string, any[]> = {}
+              for (const f of propFirmsQuery.data) {
+                if (!byFirm[f.firm]) byFirm[f.firm] = []
+                byFirm[f.firm].push(f)
+              }
+              return (
+                <div className="space-y-3">
+                  {Object.entries(byFirm).map(([firmName, accounts]) => (
+                    <div key={firmName} className="border-b border-[#1e1e2e] last:border-0 pb-3 last:pb-0">
+                      <a
+                        href={accounts[0].website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-mono text-indigo-400 hover:text-indigo-300 transition-colors font-semibold"
+                      >
+                        {firmName} ↗
+                      </a>
+                      <div className="mt-1.5 space-y-1 ml-3">
+                        {accounts.map((f: any) => (
+                          <div key={f.account_name} className="flex items-center justify-between">
+                            <span className="text-[11px] text-slate-400 font-mono">{f.account_name}</span>
+                            <div className="flex gap-3 text-[10px] text-slate-500 font-mono">
+                              <span>DD {(f.trailing_drawdown_pct * 100).toFixed(0)}%</span>
+                              <span>Target {(f.profit_target_pct * 100).toFixed(0)}%</span>
+                              <span>Fee ${f.evaluation_fee}</span>
+                              <span className="text-slate-600">Payout {(f.payout_pct * 100).toFixed(0)}%</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )
+            })()}
 
             {rankings.length > 0 && (
               <div className="space-y-2">

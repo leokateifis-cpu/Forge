@@ -55,6 +55,6 @@ export const useAppStore = create<AppState>((set, get) => ({
       projects: s.projects.map((p) => (p.id === id ? { ...p, ...updates } : p)),
     })),
 
-  activeTab: 'hypothesis',
+  activeTab: 'strategy',
   setActiveTab: (tab) => set({ activeTab: tab }),
 }))

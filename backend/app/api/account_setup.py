@@ -45,6 +45,8 @@ def list_prop_firms():
     return [
         {
             "firm": f["firm"],
+            "account_name": f.get("account_name", "Standard"),
+            "website": f.get("website", ""),
             "account_sizes": f["account_sizes"],
             "max_daily_loss_pct": f["max_daily_loss_pct"],
             "trailing_drawdown_pct": f["trailing_drawdown_pct"],
