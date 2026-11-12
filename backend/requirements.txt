@@ -11,7 +11,7 @@ psycopg2-binary==2.9.10
 
 # Task queue
 celery==5.4.0
-redis==5.2.0
+redis==6.1.0
 
 # Auth
 python-jose[cryptography]==3.3.0
