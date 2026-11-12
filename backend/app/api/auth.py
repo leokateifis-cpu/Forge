@@ -5,7 +5,7 @@ from pydantic import BaseModel, EmailStr
 
 from app.db.base import get_db
 from app.models.user import User
-from app.core.security import hash_password, verify_password, create_access_token
+from app.core.security import hash_password, verify_password, create_access_token, get_current_user
 
 router = APIRouter()
 
@@ -40,3 +40,17 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
         raise HTTPException(status_code=401, detail="Incorrect email or password")
     token = create_access_token(str(user.id))
     return TokenResponse(access_token=token)
+
+
+class UserResponse(BaseModel):
+    id: str
+    email: str
+    account_type: str | None = None
+
+    class Config:
+        from_attributes = True
+
+
+@router.get("/me", response_model=UserResponse)
+def me(current_user: User = Depends(get_current_user)):
+    return UserResponse(id=str(current_user.id), email=current_user.email, account_type=current_user.account_type)
